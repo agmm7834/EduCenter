@@ -1,0 +1,54 @@
+<!-- templates/register.html -->
+{% extends "base.html" %}
+{% block title %}Ro'yxatdan o'tish{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card mt-5">
+            <div class="card-body p-4">
+                <h3 class="text-center mb-4"><i class="fas fa-user-plus"></i> Ro'yxatdan o'tish</h3>
+                <form method="POST">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Ism</label>
+                            <input type="text" class="form-control" name="ism" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Familiya</label>
+                            <input type="text" class="form-control" name="familiya" required>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Foydalanuvchi nomi</label>
+                        <input type="text" class="form-control" name="username" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Email</label>
+                        <input type="email" class="form-control" name="email" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Telefon</label>
+                        <input type="tel" class="form-control" name="telefon">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Parol</label>
+                        <input type="password" class="form-control" name="password" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Rol</label>
+                        <select class="form-select" name="role">
+                            <option value="talaba">Talaba</option>
+                            <option value="mentor">Mentor</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Ro'yxatdan o'tish</button>
+                </form>
+                <p class="text-center mt-3">
+                    Akkauntingiz bormi? <a href="{{ url_for('login') }}">Kirish</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

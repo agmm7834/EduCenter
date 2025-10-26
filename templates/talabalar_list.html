@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block title %}Talabalar{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0"><i class="fas fa-user-graduate"></i> Talabalar Ro'yxati</h4>
+            </div>
+            <div class="card-body">
+                {% if talabalar %}
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>F.I.O</th>
+                                <th>Telefon</th>
+                                <th>Guruh</th>
+                                <th>Username</th>
+                                <th>Amallar</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for talaba in talabalar %}
+                            <tr>
+                                <td>{{ talaba.id }}</td>
+                                <td><strong>{{ talaba.ism }} {{ talaba.familiya }}</strong></td>
+                                <td>{{ talaba.telefon or '-' }}</td>
+                                <td>
+                                    {% if talaba.guruh %}
+                                        <span class="badge bg-success">{{ talaba.guruh.nomi }}</span>
+                                    {% else %}
+                                        <span class="badge bg-secondary">Guruhsiz</span>
+                                    {% endif %}
+                                </td>
+                                <td>{{ talaba.user.username }}</td>
+                                <td>
+                                    <a href="{{ url_for('talaba_detail', id=talaba.id) }}" 
+                                       class="btn btn-sm btn-info">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                    <a href="{{ url_for('talaba_delete', id=talaba.id) }}" 
+                                       class="btn btn-sm btn-danger"
+                                       onclick="return confirm('Rostdan ham o\'chirmoqchimisiz?')">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="text-center py-5">
+                    <i class="fas fa-user-graduate fa-3x text-muted mb-3"></i>
+                    <p class="text-muted">Hozircha talabalar mavjud emas</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

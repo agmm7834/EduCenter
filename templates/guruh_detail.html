@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+{% block title %}Guruh Ma'lumotlari{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header bg-success text-white">
+                <h4 class="mb-0"><i class="fas fa-users"></i> {{ guruh.nomi }}</h4>
+                <small>{{ guruh.fan.nomi }}</small>
+            </div>
+            <div class="card-body">
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <h5><i class="fas fa-info-circle"></i> Asosiy Ma'lumotlar</h5>
+                        <p><strong>Guruh nomi:</strong> {{ guruh.nomi }}</p>
+                        <p><strong>Fan:</strong> {{ guruh.fan.nomi }}</p>
+                        <p><strong>Mentor:</strong> 
+                            {% if guruh.mentor %}
+                                {{ guruh.mentor.ism }} {{ guruh.mentor.familiya }}
+                            {% else %}
+                                <span class="text-muted">Belgilanmagan</span>
+                            {% endif %}
+                        </p>
+                        <p><strong>Holat:</strong> 
+                            {% if guruh.holat == 'faol' %}
+                                <span class="badge bg-success">Faol</span>
+                            {% elif guruh.holat == 'tugallangan' %}
+                                <span class="badge bg-secondary">Tugallangan</span>
+                            {% else %}
+                                <span class="badge bg-warning">Rejalashtirilgan</span>
+                            {% endif %}
+                        </p>
+                    </div>
+                    <div class="col-md-6">
+                        <h5><i class="fas fa-chart-pie"></i> Statistika</h5>
+                        <p><strong>Talabalar soni:</strong> 
+                            <span class="badge bg-info">{{ guruh.talabalar|length }} / {{ guruh.max_talabalar }}</span>
+                        </p>
+                        {% if guruh.boshlanish_sana %}
+                        <p><strong>Boshlanish sanasi:</strong> {{ guruh.boshlanish_sana }}</p>
+                        {% endif %}
+                        {% if guruh.tugash_sana %}
+                        <p><strong>Tugash sanasi:</strong> {{ guruh.tugash_sana }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <hr>
+
+                <h5><i class="fas fa-user-graduate"></i> Talabalar Ro'yxati</h5>
+                {% if guruh.talabalar %}
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>F.I.O</th>
+                                <th>Telefon</th>
+                                <th>Email</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for talaba in guruh.talabalar %}
+                            <tr>
+                                <td>{{ loop.index }}</td>
+                                <td>{{ talaba.ism }} {{ talaba.familiya }}</td>
+                                <td>{{ talaba.telefon or '-' }}</td>
+                                <td>{{ talaba.user.email }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle"></i> Hozircha talabalar yo'q
+                </div>
+                {% endif %}
+
+                <div class="mt-4">
+                    <a href="{{ url_for('dars_jadvali', guruh_id=guruh.id) }}" class="btn btn-primary">
+                        <i class="fas fa-calendar"></i> Dars Jadvali
+                    </a>
+                    <a href="javascript:history.back()" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left"></i> Ortga
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

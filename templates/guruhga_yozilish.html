@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+{% block title %}Guruhga Yozilish{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header bg-warning text-dark">
+                <h4 class="mb-0"><i class="fas fa-paper-plane"></i> Guruhga Ariza Yuborish</h4>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle"></i>
+                    <strong>E'tibor bering!</strong> Guruhga to'g'ridan-to'g'ri yozilmaydi. 
+                    Ariza yuboriladi va administrator ko'rib chiqadi. Ariza holatini dashboard'da kuzatib turing.
+                    <br><strong>Cheklov:</strong> Har bir guruhga maksimal 5 marta ariza yuborish mumkin.
+                </div>
+                <p class="text-muted">O'zingizga mos guruhni tanlang va ariza yuboring</p>
+                
+                {% if guruhlar %}
+                <div class="row">
+                    {% for item in guruhlar %}
+                    {% set guruh = item.guruh %}
+                    {% set ariza_soni = item.ariza_soni %}
+                    {% set max_arizalar = item.max_arizalar %}
+                    {% set qabul_qilingan = item.qabul_qilingan %}
+                    <div class="col-md-6 mb-4">
+                        <div class="card h-100 {% if qabul_qilingan %}border-success{% elif ariza_soni >= max_arizalar %}border-danger{% else %}border-primary{% endif %}">
+                            <div class="card-header {% if qabul_qilingan %}bg-success text-white{% elif ariza_soni >= max_arizalar %}bg-danger text-white{% else %}bg-primary text-white{% endif %}">
+                                <h5 class="mb-0">{{ guruh.nomi }}</h5>
+                                {% if ariza_soni > 0 %}
+                                <small>Arizalar: {{ ariza_soni }}/{{ max_arizalar }}</small>
+                                {% endif %}
+                            </div>
+                            <div class="card-body">
+                                <p><strong><i class="fas fa-book"></i> Fan:</strong> {{ guruh.fan.nomi }}</p>
+                                
+                                {% if guruh.fan.tavsif %}
+                                <p class="text-muted small">{{ guruh.fan.tavsif[:100] }}...</p>
+                                {% endif %}
+                                
+                                <p><strong><i class="fas fa-chalkboard-teacher"></i> Mentor:</strong> 
+                                    {% if guruh.mentor %}
+                                        {{ guruh.mentor.ism }} {{ guruh.mentor.familiya }}
+                                    {% else %}
+                                        <span class="text-muted">Belgilanmagan</span>
+                                    {% endif %}
+                                </p>
+                                
+                                {% if guruh.boshlanish_sana %}
+                                <p><strong><i class="fas fa-calendar-start"></i> Boshlanish:</strong> {{ guruh.boshlanish_sana }}</p>
+                                {% endif %}
+                                
+                                <p><strong><i class="fas fa-users"></i> Talabalar:</strong> 
+                                    <span class="badge bg-info">
+                                        {{ guruh.talabalar|length }} / {{ guruh.max_talabalar }}
+                                    </span>
+                                </p>
+                                
+                                {% if guruh.fan.narxi %}
+                                <p><strong><i class="fas fa-money-bill"></i> Narxi:</strong> 
+                                    <span class="text-success fw-bold">{{ '{:,.0f}'.format(guruh.fan.narxi) }} so'm</span>
+                                </p>
+                                {% endif %}
+                                
+                                {% if guruh.fan.davomiyligi %}
+                                <p><strong><i class="fas fa-clock"></i> Davomiyligi:</strong> {{ guruh.fan.davomiyligi }} soat</p>
+                                {% endif %}
+                                
+                                <form method="POST" class="mt-3">
+                                    <input type="hidden" name="guruh_id" value="{{ guruh.id }}">
+                                    {% if qabul_qilingan %}
+                                        <button type="button" class="btn btn-success w-100" disabled>
+                                            <i class="fas fa-check"></i> Qabul qilingan
+                                        </button>
+                                    {% elif guruh.talabalar|length >= guruh.max_talabalar %}
+                                        <button type="button" class="btn btn-secondary w-100" disabled>
+                                            <i class="fas fa-times"></i> Guruh to'lgan
+                                        </button>
+                                    {% elif ariza_soni >= max_arizalar %}
+                                        <button type="button" class="btn btn-danger w-100" disabled>
+                                            <i class="fas fa-ban"></i> Ariza limiti tugagan ({{ ariza_soni }}/{{ max_arizalar }})
+                                        </button>
+                                    {% else %}
+                                        <button type="submit" class="btn btn-warning w-100"
+                                                onclick="return confirm('{{ guruh.nomi }} guruhiga ariza yubormoqchimisiz?')">
+                                            <i class="fas fa-paper-plane"></i> Ariza Yuborish
+                                            {% if ariza_soni > 0 %}
+                                            <small>({{ ariza_soni }}/{{ max_arizalar }})</small>
+                                            {% endif %}
+                                        </button>
+                                    {% endif %}
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="text-center py-5">
+                    <i class="fas fa-info-circle fa-3x text-muted mb-3"></i>
+                    <p class="text-muted">Hozircha faol guruhlar mavjud emas</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

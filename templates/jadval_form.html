@@ -1,0 +1,140 @@
+{% extends "base.html" %}
+{% block title %}Dars Jadvali Qo'shish{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header bg-info text-white">
+                <h4 class="mb-0"><i class="fas fa-calendar-plus"></i> Yangi Dars Jadvali Qo'shish</h4>
+                <small>{{ guruh.nomi }} - {{ guruh.fan.nomi }}</small>
+            </div>
+            <div class="card-body">
+                <form method="POST" id="jadvalForm">
+                    <!-- Kun tanlash -->
+                    <div class="mb-4">
+                        <label class="form-label"><strong>Kunlarni tanlang *</strong></label>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="kun_turi" id="barcha" value="barcha" checked>
+                                    <label class="form-check-label" for="barcha">
+                                        <i class="fas fa-calendar-week text-primary"></i> Barcha kunlar
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="kun_turi" id="juft" value="juft">
+                                    <label class="form-check-label" for="juft">
+                                        <i class="fas fa-calendar-day text-success"></i> Juft kunlar
+                                        <small class="d-block text-muted">(Dushanba, Chorshanba, Juma, Yakshanba)</small>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="kun_turi" id="toq" value="toq">
+                                    <label class="form-check-label" for="toq">
+                                        <i class="fas fa-calendar-day text-warning"></i> Toq kunlar
+                                        <small class="d-block text-muted">(Seshanba, Payshanba, Shanba)</small>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Individual kun tanlash -->
+                        <div class="mt-3" id="individual-kunlar" style="display: none;">
+                            <label class="form-label">Kunlarni tanlang:</label>
+                            <div class="row">
+                                {% for kun in kunlar %}
+                                <div class="col-md-3 mb-2">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="kunlar" id="kun_{{ loop.index }}" value="{{ kun }}">
+                                        <label class="form-check-label" for="kun_{{ loop.index }}">{{ kun }}</label>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        
+                        <div class="mt-2">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="kun_turi" id="tanlash" value="tanlash">
+                                <label class="form-check-label" for="tanlash">
+                                    <i class="fas fa-hand-pointer text-info"></i> O'zim tanlayman
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Vaqt va xona -->
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Boshlanish vaqti *</label>
+                            <input type="time" class="form-control" name="boshlanish_vaqti" id="boshlanish_vaqti" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Tugash vaqti *</label>
+                            <input type="time" class="form-control" name="tugash_vaqti" id="tugash_vaqti" required>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Xona</label>
+                        <input type="text" class="form-control" name="xona" 
+                               placeholder="Masalan: A-101">
+                    </div>
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-info">
+                            <i class="fas fa-save"></i> Saqlash
+                        </button>
+                        <a href="{{ url_for('dars_jadvali', guruh_id=guruh.id) }}" class="btn btn-secondary">
+                            <i class="fas fa-times"></i> Bekor qilish
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const kunTuriRadios = document.querySelectorAll('input[name="kun_turi"]');
+    const individualKunlar = document.getElementById('individual-kunlar');
+    
+    kunTuriRadios.forEach(radio => {
+        radio.addEventListener('change', function() {
+            if (this.value === 'tanlash') {
+                individualKunlar.style.display = 'block';
+            } else {
+                individualKunlar.style.display = 'none';
+            }
+        });
+    });
+});
+
+document.getElementById('jadvalForm').addEventListener('submit', function(e) {
+    const boshlanish = document.getElementById('boshlanish_vaqti').value;
+    const tugash = document.getElementById('tugash_vaqti').value;
+    const kunTuri = document.querySelector('input[name="kun_turi"]:checked').value;
+    
+    if (boshlanish && tugash) {
+        if (boshlanish >= tugash) {
+            e.preventDefault();
+            alert('Tugash vaqti boshlanish vaqtidan keyin bo\'lishi kerak!');
+            return false;
+        }
+    }
+    
+    if (kunTuri === 'tanlash') {
+        const tanlanganKunlar = document.querySelectorAll('input[name="kunlar"]:checked');
+        if (tanlanganKunlar.length === 0) {
+            e.preventDefault();
+            alert('Kamida bitta kunni tanlang!');
+            return false;
+        }
+    }
+});
+</script>
+{% endblock %}

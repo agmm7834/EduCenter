@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% block title %}{% if guruh %}Guruhni tahrirlash{% else %}Yangi Guruh{% endif %}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header bg-success text-white">
+                <h4 class="mb-0">
+                    <i class="fas fa-users"></i> 
+                    {% if guruh %}Guruhni tahrirlash{% else %}Yangi Guruh Yaratish{% endif %}
+                </h4>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    <div class="mb-3">
+                        <label class="form-label">Guruh Nomi *</label>
+                        <input type="text" class="form-control" name="nomi" 
+                               value="{{ guruh.nomi if guruh else '' }}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Fan *</label>
+                        <select class="form-select" name="fan_id" required>
+                            <option value="">Fanni tanlang</option>
+                            {% for fan in fanlar %}
+                            <option value="{{ fan.id }}" 
+                                    {% if guruh and guruh.fan_id == fan.id %}selected{% endif %}>
+                                {{ fan.nomi }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Mentor</label>
+                        <select class="form-select" name="mentor_id">
+                            <option value="">Mentorni tanlang</option>
+                            {% for mentor in mentorlar %}
+                            <option value="{{ mentor.id }}" 
+                                    {% if guruh and guruh.mentor_id == mentor.id %}selected{% endif %}>
+                                {{ mentor.ism }} {{ mentor.familiya }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Boshlanish sanasi</label>
+                            <input type="date" class="form-control" name="boshlanish_sana" 
+                                   value="{{ guruh.boshlanish_sana if guruh else '' }}">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Maksimal talabalar</label>
+                            <input type="number" class="form-control" name="max_talabalar" 
+                                   value="{{ guruh.max_talabalar if guruh else 15 }}" min="1">
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Holat</label>
+                        <select class="form-select" name="holat">
+                            <option value="faol" {% if guruh and guruh.holat == 'faol' %}selected{% endif %}>Faol</option>
+                            <option value="rejalashtirilgan" {% if guruh and guruh.holat == 'rejalashtirilgan' %}selected{% endif %}>Rejalashtirilgan</option>
+                            <option value="tugallangan" {% if guruh and guruh.holat == 'tugallangan' %}selected{% endif %}>Tugallangan</option>
+                        </select>
+                    </div>
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-success">
+                            <i class="fas fa-save"></i> Saqlash
+                        </button>
+                        <a href="{{ url_for('guruhlar_list') }}" class="btn btn-secondary">
+                            <i class="fas fa-times"></i> Bekor qilish
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

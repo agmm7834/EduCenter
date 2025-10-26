@@ -1,0 +1,201 @@
+{% extends "base.html" %}
+{% block title %}Bosh sahifa - O'quv Markaz{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12 text-center text-white mt-5">
+        <h1 class="display-3 fw-bold mb-3">
+            <i class="fas fa-graduation-cap"></i> O'quv Markaz Tizimi
+        </h1>
+        <p class="lead mb-5">Zamonaviy ta'lim boshqaruv platformasi</p>
+    </div>
+</div>
+
+{% if not session.user_id %}
+<div class="row justify-content-center">
+    <div class="col-md-10">
+        <div class="card">
+            <div class="card-body p-5">
+                <div class="row text-center">
+                    <div class="col-md-4 mb-4">
+                        <div class="p-4">
+                            <i class="fas fa-book-reader fa-4x text-primary mb-3"></i>
+                            <h4>Sifatli Ta'lim</h4>
+                            <p class="text-muted">Professional mentorlar bilan zamonaviy dasturlar</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-4">
+                        <div class="p-4">
+                            <i class="fas fa-users fa-4x text-success mb-3"></i>
+                            <h4>Kichik Guruhlar</h4>
+                            <p class="text-muted">Har bir talabaga individual yondashuv</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-4">
+                        <div class="p-4">
+                            <i class="fas fa-chart-line fa-4x text-info mb-3"></i>
+                            <h4>Natija Kafolati</h4>
+                            <p class="text-muted">Zamonaviy o'qitish metodlari va amaliyot</p>
+                        </div>
+                    </div>
+                </div>
+
+                <hr class="my-4">
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <div class="card bg-light h-100">
+                            <div class="card-body text-center p-4">
+                                <i class="fas fa-user-graduate fa-3x text-primary mb-3"></i>
+                                <h5 class="card-title">Talaba sifatida</h5>
+                                <p class="card-text">Ro'yxatdan o'ting va o'qishni boshlang</p>
+                                <a href="{{ url_for('register') }}" class="btn btn-primary btn-lg">
+                                    <i class="fas fa-user-plus"></i> Ro'yxatdan o'tish
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="card bg-light h-100">
+                            <div class="card-body text-center p-4">
+                                <i class="fas fa-chalkboard-teacher fa-3x text-success mb-3"></i>
+                                <h5 class="card-title">Mentor sifatida</h5>
+                                <p class="card-text">Bilimingizni ulashing va o'rgating</p>
+                                <a href="{{ url_for('register') }}" class="btn btn-success btn-lg">
+                                    <i class="fas fa-user-tie"></i> Mentor bo'lish
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-center mt-4">
+                    <p class="text-muted">Akkauntingiz bormi?</p>
+                    <a href="{{ url_for('login') }}" class="btn btn-outline-primary btn-lg">
+                        <i class="fas fa-sign-in-alt"></i> Tizimga kirish
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-5">
+    <div class="col-12">
+        <div class="card bg-white bg-opacity-90">
+            <div class="card-body p-4">
+                <h3 class="text-center mb-4">
+                    <i class="fas fa-star text-warning"></i> Bizning Afzalliklarimiz
+                </h3>
+                <div class="row">
+                    <div class="col-md-3 text-center mb-3">
+                        <i class="fas fa-laptop-code fa-3x text-primary mb-2"></i>
+                        <h5>Zamonaviy Texnologiyalar</h5>
+                        <p class="text-muted">Eng so'nggi dasturlar va asboblar</p>
+                    </div>
+                    <div class="col-md-3 text-center mb-3">
+                        <i class="fas fa-calendar-alt fa-3x text-success mb-2"></i>
+                        <h5>Moslashuvchan Jadval</h5>
+                        <p class="text-muted">O'zingizga qulay vaqtni tanlang</p>
+                    </div>
+                    <div class="col-md-3 text-center mb-3">
+                        <i class="fas fa-certificate fa-3x text-info mb-2"></i>
+                        <h5>Sertifikat</h5>
+                        <p class="text-muted">Kurs yakunida rasmiy sertifikat</p>
+                    </div>
+                    <div class="col-md-3 text-center mb-3">
+                        <i class="fas fa-headset fa-3x text-warning mb-2"></i>
+                        <h5>24/7 Qo'llab-quvvatlash</h5>
+                        <p class="text-muted">Doimo sizga yordam beramiz</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% else %}
+<!-- Tizimga kirgan foydalanuvchilar uchun -->
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-body text-center p-5">
+                <i class="fas fa-check-circle fa-4x text-success mb-3"></i>
+                <h2>Xush kelibsiz, {{ session.username }}! 👋</h2>
+                <p class="lead text-muted mb-4">Tizimga muvaffaqiyatli kirdingiz</p>
+                
+                {% if session.role == 'admin' %}
+                <a href="{{ url_for('admin_dashboard') }}" class="btn btn-primary btn-lg">
+                    <i class="fas fa-tachometer-alt"></i> Admin Panelga o'tish
+                </a>
+                {% elif session.role == 'mentor' %}
+                <a href="{{ url_for('mentor_dashboard') }}" class="btn btn-success btn-lg">
+                    <i class="fas fa-chalkboard-teacher"></i> Dashboard
+                </a>
+                {% elif session.role == 'talaba' %}
+                <a href="{{ url_for('talaba_dashboard') }}" class="btn btn-info btn-lg">
+                    <i class="fas fa-user-graduate"></i> Dashboard
+                </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<!-- Statistika bo'limi -->
+<div class="row mt-5 mb-5">
+    <div class="col-12">
+        <div class="card bg-dark text-white">
+            <div class="card-body p-5">
+                <h3 class="text-center mb-4">
+                    <i class="fas fa-chart-bar"></i> Bizning Yutuqlarimiz
+                </h3>
+                <div class="row text-center">
+                    <div class="col-md-3 mb-3">
+                        <div class="p-3">
+                            <h1 class="display-4 fw-bold">500+</h1>
+                            <p class="lead">Talabalar</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <div class="p-3">
+                            <h1 class="display-4 fw-bold">50+</h1>
+                            <p class="lead">Mentorlar</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <div class="p-3">
+                            <h1 class="display-4 fw-bold">30+</h1>
+                            <p class="lead">Kurslar</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <div class="p-3">
+                            <h1 class="display-4 fw-bold">95%</h1>
+                            <p class="lead">Mamnunlik</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Footer -->
+<div class="row mt-5">
+    <div class="col-12">
+        <div class="card bg-white bg-opacity-90">
+            <div class="card-body text-center p-4">
+                <p class="mb-2">
+                    <i class="fas fa-phone"></i> +998 90 123 45 67 | 
+                    <i class="fas fa-envelope"></i> info@oquvmarkaz.uz
+                </p>
+                <p class="text-muted mb-0">
+                    © 2024 O'quv Markaz Tizimi. Barcha huquqlar himoyalangan.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,185 @@
+{% extends "base.html" %}
+{% block title %}Dars Jadvali{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header bg-info text-white d-flex justify-content-between align-items-center">
+                <div>
+                    <h4 class="mb-0"><i class="fas fa-calendar-alt"></i> Dars Jadvali</h4>
+                    <small>{{ guruh.nomi }} - {{ guruh.fan.nomi }}</small>
+                </div>
+                {% if session.role == 'admin' %}
+                <a href="{{ url_for('jadval_add', guruh_id=guruh.id) }}" class="btn btn-light">
+                    <i class="fas fa-plus"></i> Yangi Dars
+                </a>
+                {% endif %}
+            </div>
+            <div class="card-body">
+                <!-- Guruh ma'lumotlari -->
+                <div class="row mb-4">
+                    <div class="col-md-4">
+                        <div class="card bg-light">
+                            <div class="card-body text-center">
+                                <i class="fas fa-book fa-2x text-primary mb-2"></i>
+                                <h6>Fan</h6>
+                                <p class="mb-0">{{ guruh.fan.nomi }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card bg-light">
+                            <div class="card-body text-center">
+                                <i class="fas fa-chalkboard-teacher fa-2x text-success mb-2"></i>
+                                <h6>Mentor</h6>
+                                <p class="mb-0">
+                                    {% if guruh.mentor %}
+                                        {{ guruh.mentor.ism }} {{ guruh.mentor.familiya }}
+                                    {% else %}
+                                        Belgilanmagan
+                                    {% endif %}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card bg-light">
+                            <div class="card-body text-center">
+                                <i class="fas fa-users fa-2x text-info mb-2"></i>
+                                <h6>Talabalar</h6>
+                                <p class="mb-0">{{ guruh.talabalar|length }} / {{ guruh.max_talabalar }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <hr>
+
+                <!-- Dars jadvali -->
+                {% if jadval %}
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover">
+                        <thead class="table-info">
+                            <tr>
+                                <th width="20%"><i class="fas fa-calendar-day"></i> Kun</th>
+                                <th width="20%"><i class="fas fa-clock"></i> Boshlanish</th>
+                                <th width="20%"><i class="fas fa-clock"></i> Tugash</th>
+                                <th width="20%"><i class="fas fa-door-open"></i> Xona</th>
+                                {% if session.role == 'admin' %}
+                                <th width="20%">Amallar</th>
+                                {% endif %}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for dars in jadval %}
+                            <tr>
+                                <td><strong>{{ dars.kun }}</strong></td>
+                                <td>
+                                    {% if dars.boshlanish_vaqti %}
+                                        <span class="badge bg-success">{{ dars.boshlanish_vaqti.strftime('%H:%M') }}</span>
+                                    {% else %}
+                                        <span class="text-muted">-</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if dars.tugash_vaqti %}
+                                        <span class="badge bg-danger">{{ dars.tugash_vaqti.strftime('%H:%M') }}</span>
+                                    {% else %}
+                                        <span class="text-muted">-</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if dars.xona %}
+                                        <i class="fas fa-door-open text-primary"></i> {{ dars.xona }}
+                                    {% else %}
+                                        <span class="text-muted">-</span>
+                                    {% endif %}
+                                </td>
+                                {% if session.role == 'admin' %}
+                                <td>
+                                    <div class="btn-group" role="group">
+                                        <a href="{{ url_for('jadval_delete', id=dars.id) }}" 
+                                           class="btn btn-sm btn-warning"
+                                           onclick="return confirm('Rostdan ham bekor qilmoqchimisiz?')"
+                                           title="Bekor qilish">
+                                            <i class="fas fa-ban"></i>
+                                        </a>
+                                        <a href="{{ url_for('jadval_restore', id=dars.id) }}" 
+                                           class="btn btn-sm btn-success"
+                                           onclick="return confirm('Rostdan ham qayta faollashtirmoqchimisiz?')"
+                                           title="Qayta faollashtirish"
+                                           style="display: none;">
+                                            <i class="fas fa-undo"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                                {% endif %}
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Haftalik ko'rinish -->
+                <div class="mt-4">
+                    <h5><i class="fas fa-calendar-week"></i> Haftalik Jadval</h5>
+                    <div class="row">
+                        {% set kunlar = ['Dushanba', 'Seshanba', 'Chorshanba', 'Payshanba', 'Juma', 'Shanba', 'Yakshanba'] %}
+                        {% for kun in kunlar %}
+                        <div class="col-md-3 mb-3">
+                            <div class="card {% if jadval|selectattr('kun', 'equalto', kun)|list %}border-primary{% else %}border-secondary{% endif %}">
+                                <div class="card-header {% if jadval|selectattr('kun', 'equalto', kun)|list %}bg-primary text-white{% else %}bg-light{% endif %}">
+                                    <h6 class="mb-0">{{ kun }}</h6>
+                                </div>
+                                <div class="card-body">
+                                    {% set kun_darslari = jadval|selectattr('kun', 'equalto', kun)|list %}
+                                    {% if kun_darslari %}
+                                        {% for dars in kun_darslari %}
+                                        <div class="mb-2 p-2 bg-light rounded">
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <div>
+                                                    <i class="fas fa-clock text-primary"></i>
+                                                    <strong>{{ dars.boshlanish_vaqti.strftime('%H:%M') if dars.boshlanish_vaqti else '-' }}</strong>
+                                                    <span class="text-muted">-</span>
+                                                    <strong>{{ dars.tugash_vaqti.strftime('%H:%M') if dars.tugash_vaqti else '-' }}</strong>
+                                                </div>
+                                            </div>
+                                            {% if dars.xona %}
+                                            <small class="text-muted">
+                                                <i class="fas fa-door-open"></i> {{ dars.xona }}
+                                            </small>
+                                            {% endif %}
+                                        </div>
+                                        {% endfor %}
+                                    {% else %}
+                                        <p class="text-muted small mb-0">Dars yo'q</p>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% else %}
+                <div class="text-center py-5">
+                    <i class="fas fa-calendar-times fa-3x text-muted mb-3"></i>
+                    <p class="text-muted">Hozircha dars jadvali mavjud emas</p>
+                    {% if session.role == 'admin' %}
+                    <a href="{{ url_for('jadval_add', guruh_id=guruh.id) }}" class="btn btn-primary">
+                        <i class="fas fa-plus"></i> Jadval qo'shish
+                    </a>
+                    {% endif %}
+                </div>
+                {% endif %}
+
+                <div class="mt-4">
+                    <a href="javascript:history.back()" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left"></i> Ortga
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

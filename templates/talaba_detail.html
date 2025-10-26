@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}Talaba Ma'lumotlari{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0"><i class="fas fa-user-graduate"></i> Talaba Ma'lumotlari</h4>
+            </div>
+            <div class="card-body">
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <p><strong>Ism:</strong> {{ talaba.ism }}</p>
+                        <p><strong>Familiya:</strong> {{ talaba.familiya }}</p>
+                        <p><strong>Telefon:</strong> {{ talaba.telefon or '-' }}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <p><strong>Email:</strong> {{ talaba.user.email }}</p>
+                        <p><strong>Manzil:</strong> {{ talaba.manzil or '-' }}</p>
+                        <p><strong>Tug'ilgan sana:</strong> {{ talaba.tug_sana or '-' }}</p>
+                    </div>
+                </div>
+                <hr>
+                <h5>Guruh Ma'lumotlari</h5>
+                {% if talaba.guruh %}
+                <div class="alert alert-success">
+                    <p><strong>Guruh:</strong> {{ talaba.guruh.nomi }}</p>
+                    <p><strong>Fan:</strong> {{ talaba.guruh.fan.nomi }}</p>
+                    <p><strong>Mentor:</strong> 
+                        {% if talaba.guruh.mentor %}
+                            {{ talaba.guruh.mentor.ism }} {{ talaba.guruh.mentor.familiya }}
+                        {% else %}
+                            Belgilanmagan
+                        {% endif %}
+                    </p>
+                </div>
+                {% else %}
+                <div class="alert alert-warning">
+                    Talaba hozircha guruhga yozilmagan
+                </div>
+                {% endif %}
+                
+                <a href="{{ url_for('talabalar_list') }}" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Ortga
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

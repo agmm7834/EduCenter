@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% block title %}Guruhlar{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
+                <h4 class="mb-0"><i class="fas fa-users"></i> Guruhlar Ro'yxati</h4>
+                <a href="{{ url_for('guruh_add') }}" class="btn btn-light">
+                    <i class="fas fa-plus"></i> Yangi Guruh
+                </a>
+            </div>
+            <div class="card-body">
+                {% if guruhlar %}
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Guruh Nomi</th>
+                                <th>Fan</th>
+                                <th>Mentor</th>
+                                <th>Talabalar</th>
+                                <th>Holat</th>
+                                <th>Amallar</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for guruh in guruhlar %}
+                            <tr>
+                                <td>{{ guruh.id }}</td>
+                                <td><strong>{{ guruh.nomi }}</strong></td>
+                                <td>{{ guruh.fan.nomi }}</td>
+                                <td>
+                                    {% if guruh.mentor %}
+                                        {{ guruh.mentor.ism }} {{ guruh.mentor.familiya }}
+                                    {% else %}
+                                        <span class="text-muted">Belgilanmagan</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <span class="badge bg-info">
+                                        {{ guruh.talabalar|length }} / {{ guruh.max_talabalar }}
+                                    </span>
+                                </td>
+                                <td>
+                                    {% if guruh.holat == 'faol' %}
+                                        <span class="badge bg-success">Faol</span>
+                                    {% elif guruh.holat == 'tugallangan' %}
+                                        <span class="badge bg-secondary">Tugallangan</span>
+                                    {% else %}
+                                        <span class="badge bg-warning">Rejalashtirilgan</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <a href="{{ url_for('dars_jadvali', guruh_id=guruh.id) }}" 
+                                       class="btn btn-sm btn-info" title="Jadval">
+                                        <i class="fas fa-calendar"></i>
+                                    </a>
+                                    <a href="{{ url_for('guruh_edit', id=guruh.id) }}" 
+                                       class="btn btn-sm btn-warning">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <a href="{{ url_for('guruh_delete', id=guruh.id) }}" 
+                                       class="btn btn-sm btn-danger"
+                                       onclick="return confirm('Rostdan ham o\'chirmoqchimisiz?')">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="text-center py-5">
+                    <i class="fas fa-users fa-3x text-muted mb-3"></i>
+                    <p class="text-muted">Hozircha guruhlar mavjud emas</p>
+                    <a href="{{ url_for('guruh_add') }}" class="btn btn-success">
+                        <i class="fas fa-plus"></i> Birinchi guruhni yarating
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,143 @@
+<!-- templates/talaba_dashboard.html -->
+{% extends "base.html" %}
+{% block title %}Talaba Dashboard{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="card mb-4">
+            <div class="card-body">
+                <h2><i class="fas fa-user-graduate"></i> Mening Kabinetim</h2>
+                <p class="text-muted">Salom, {{ talaba.ism }} {{ talaba.familiya }}!</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-4 mb-4">
+        <div class="card">
+            <div class="card-body text-center">
+                <i class="fas fa-user-circle fa-4x text-primary mb-3"></i>
+                <h5>Mening Profilim</h5>
+                <p class="text-muted">Shaxsiy ma'lumotlaringiz</p>
+                <a href="{{ url_for('talaba_profile') }}" class="btn btn-primary">Ko'rish</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-4">
+        <div class="card">
+            <div class="card-body text-center">
+                <i class="fas fa-users fa-4x text-success mb-3"></i>
+                <h5>Mening Guruhim</h5>
+                {% if talaba.guruh %}
+                    <p class="text-muted">{{ talaba.guruh.nomi }}</p>
+                    <a href="{{ url_for('dars_jadvali', guruh_id=talaba.guruh.id) }}" class="btn btn-success">Jadval</a>
+                {% else %}
+                    <p class="text-muted">Guruhga yozilmagansiz</p>
+                    <a href="{{ url_for('guruhga_yozilish') }}" class="btn btn-warning">Yozilish</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-4">
+        <div class="card">
+            <div class="card-body text-center">
+                <i class="fas fa-calendar-alt fa-4x text-info mb-3"></i>
+                <h5>Dars Jadvali</h5>
+                <p class="text-muted">Haftalik darslar</p>
+                {% if talaba.guruh %}
+                    <a href="{{ url_for('dars_jadvali', guruh_id=talaba.guruh.id) }}" class="btn btn-info">Ko'rish</a>
+                {% else %}
+                    <button class="btn btn-secondary" disabled>Mavjud emas</button>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Ariza holati -->
+{% if arizalar %}
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header bg-warning text-dark">
+                <h5><i class="fas fa-clipboard-list"></i> Mening Arizalarim</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Guruh</th>
+                                <th>Fan</th>
+                                <th>Ariza sanasi</th>
+                                <th>Holat</th>
+                                <th>Javob sanasi</th>
+                                <th>Izoh</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for ariza in arizalar %}
+                            <tr>
+                                <td>
+                                    {{ ariza.guruh.nomi }}
+                                    <br><small class="text-muted">{{ ariza.guruh.fan.nomi }}</small>
+                                </td>
+                                <td>{{ ariza.guruh.fan.nomi }}</td>
+                                <td>{{ ariza.ariza_sana.strftime('%d.%m.%Y %H:%M') }}</td>
+                                <td>
+                                    {% if ariza.holat == 'kutilmoqda' %}
+                                        <span class="badge bg-warning">Kutilmoqda</span>
+                                    {% elif ariza.holat == 'qabul_qilindi' %}
+                                        <span class="badge bg-success">Qabul qilindi</span>
+                                    {% elif ariza.holat == 'qabul_qilinmadi' %}
+                                        <span class="badge bg-danger">Qabul qilinmadi</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if ariza.javob_sana %}
+                                        {{ ariza.javob_sana.strftime('%d.%m.%Y %H:%M') }}
+                                    {% else %}
+                                        <span class="text-muted">-</span>
+                                    {% endif %}
+                                </td>
+                                <td>{{ ariza.izoh or '-' }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+{% if talaba.guruh %}
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h5><i class="fas fa-info-circle"></i> Guruh Ma'lumotlari</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <p><strong>Guruh:</strong> {{ talaba.guruh.nomi }}</p>
+                        <p><strong>Fan:</strong> {{ talaba.guruh.fan.nomi }}</p>
+                        <p><strong>Mentor:</strong> {{ talaba.guruh.mentor.ism }} {{ talaba.guruh.mentor.familiya }}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <p><strong>Boshlanish:</strong> {{ talaba.guruh.boshlanish_sana }}</p>
+                        <p><strong>Holat:</strong> 
+                            <span class="badge bg-success">{{ talaba.guruh.holat }}</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

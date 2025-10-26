@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block title %}Profilni Tahrirlash{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header bg-success text-white">
+                <h4 class="mb-0"><i class="fas fa-edit"></i> Profilni Tahrirlash</h4>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Ism *</label>
+                            <input type="text" class="form-control" name="ism" 
+                                   value="{{ mentor.ism }}" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Familiya *</label>
+                            <input type="text" class="form-control" name="familiya" 
+                                   value="{{ mentor.familiya }}" required>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Telefon</label>
+                        <input type="tel" class="form-control" name="telefon" 
+                               value="{{ mentor.telefon or '' }}">
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Mutaxassislik</label>
+                            <input type="text" class="form-control" name="mutaxassislik" 
+                                   value="{{ mentor.mutaxassislik or '' }}">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Tajriba (yil)</label>
+                            <input type="number" class="form-control" name="tajriba_yili" 
+                                   value="{{ mentor.tajriba_yili or '' }}">
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Biografiya</label>
+                        <textarea class="form-control" name="biografiya" rows="4">{{ mentor.biografiya or '' }}</textarea>
+                    </div>
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-success">
+                            <i class="fas fa-save"></i> Saqlash
+                        </button>
+                        <a href="{{ url_for('mentor_profile') }}" class="btn btn-secondary">
+                            <i class="fas fa-times"></i> Bekor qilish
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

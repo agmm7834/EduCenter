@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+{% block title %}Arizalar Ro'yxati{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header bg-warning text-dark d-flex justify-content-between align-items-center">
+                <div>
+                    <h4 class="mb-0"><i class="fas fa-clipboard-list"></i> Guruhga Ariza Ro'yxati</h4>
+                    <small>Talabalar guruhga qo'shilish arizalari</small>
+                </div>
+                <div>
+                    <span class="badge bg-danger fs-6">{{ arizalar|length }} ta ariza</span>
+                </div>
+            </div>
+            <div class="card-body">
+                {% if arizalar %}
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead class="table-warning">
+                            <tr>
+                                <th width="5%">#</th>
+                                <th width="20%">Talaba</th>
+                                <th width="15%">Guruh</th>
+                                <th width="15%">Fan</th>
+                                <th width="15%">Ariza sanasi</th>
+                                <th width="10%">Holat</th>
+                                <th width="20%">Amallar</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for ariza in arizalar %}
+                            <tr>
+                                <td>{{ loop.index }}</td>
+                                <td>
+                                    <div>
+                                        <strong>{{ ariza.talaba.ism }} {{ ariza.talaba.familiya }}</strong>
+                                        <br><small class="text-muted">
+                                            <i class="fas fa-phone"></i> {{ ariza.talaba.telefon or 'Telefon yo\'q' }}
+                                        </small>
+                                    </div>
+                                </td>
+                                <td>
+                                    <strong>{{ ariza.guruh.nomi }}</strong>
+                                    <br><small class="text-muted">
+                                        <i class="fas fa-users"></i> {{ ariza.guruh.talabalar|length }}/{{ ariza.guruh.max_talabalar }}
+                                    </small>
+                                </td>
+                                <td>{{ ariza.guruh.fan.nomi }}</td>
+                                <td>{{ ariza.ariza_sana.strftime('%d.%m.%Y %H:%M') }}</td>
+                                <td>
+                                    {% if ariza.holat == 'kutilmoqda' %}
+                                        <span class="badge bg-warning">Kutilmoqda</span>
+                                    {% elif ariza.holat == 'qabul_qilindi' %}
+                                        <span class="badge bg-success">Qabul qilindi</span>
+                                    {% elif ariza.holat == 'qabul_qilinmadi' %}
+                                        <span class="badge bg-danger">Qabul qilinmadi</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <div class="btn-group" role="group">
+                                        {% if ariza.holat == 'kutilmoqda' %}
+                                        <a href="{{ url_for('ariza_qabul', id=ariza.id) }}" 
+                                           class="btn btn-sm btn-success"
+                                           onclick="return confirm('Arizani qabul qilmoqchimisiz?')"
+                                           title="Qabul qilish">
+                                            <i class="fas fa-check"></i>
+                                        </a>
+                                        <a href="{{ url_for('ariza_rad', id=ariza.id) }}" 
+                                           class="btn btn-sm btn-danger"
+                                           title="Rad etish">
+                                            <i class="fas fa-times"></i>
+                                        </a>
+                                        {% endif %}
+                                        <a href="{{ url_for('ariza_detail', id=ariza.id) }}" 
+                                           class="btn btn-sm btn-info"
+                                           title="Tafsilotlar">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="text-center py-5">
+                    <i class="fas fa-clipboard-list fa-3x text-muted mb-3"></i>
+                    <h5 class="text-muted">Hozircha arizalar mavjud emas</h5>
+                    <p class="text-muted">Talabalar guruhga ariza yuborganlarida bu yerda ko'rinadi</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="mt-4">
+    <a href="{{ url_for('admin_dashboard') }}" class="btn btn-secondary">
+        <i class="fas fa-arrow-left"></i> Dashboard'ga qaytish
+    </a>
+</div>
+{% endblock %}

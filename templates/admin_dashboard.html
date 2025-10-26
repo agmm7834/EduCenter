@@ -1,0 +1,163 @@
+<!-- templates/admin_dashboard.html -->
+{% extends "base.html" %}
+{% block title %}Admin Dashboard{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="card mb-4">
+            <div class="card-body">
+                <h2><i class="fas fa-tachometer-alt"></i> Admin Dashboard</h2>
+                <p class="text-muted">Tizim ma'lumotlari va boshqaruv</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-3 mb-4">
+        <div class="card bg-primary text-white">
+            <div class="card-body text-center">
+                <i class="fas fa-user-graduate fa-3x mb-3"></i>
+                <h3>{{ talabalar_soni }}</h3>
+                <p>Talabalar</p>
+                <a href="{{ url_for('talabalar_list') }}" class="btn btn-light btn-sm">Ko'rish</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-4">
+        <div class="card bg-success text-white">
+            <div class="card-body text-center">
+                <i class="fas fa-chalkboard-teacher fa-3x mb-3"></i>
+                <h3>{{ mentorlar_soni }}</h3>
+                <p>Mentorlar</p>
+                <a href="{{ url_for('mentorlar_list') }}" class="btn btn-light btn-sm">Ko'rish</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-4">
+        <div class="card bg-info text-white">
+            <div class="card-body text-center">
+                <i class="fas fa-users fa-3x mb-3"></i>
+                <h3>{{ guruhlar_soni }}</h3>
+                <p>Guruhlar</p>
+                <a href="{{ url_for('guruhlar_list') }}" class="btn btn-light btn-sm">Ko'rish</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-4">
+        <div class="card bg-warning text-white">
+            <div class="card-body text-center">
+                <i class="fas fa-book fa-3x mb-3"></i>
+                <h3>{{ fanlar_soni }}</h3>
+                <p>Fanlar</p>
+                <a href="{{ url_for('fanlar_list') }}" class="btn btn-light btn-sm">Ko'rish</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bildirishnomalar -->
+{% if arizalar %}
+<div class="row">
+    <div class="col-12">
+        <div class="card border-warning">
+            <div class="card-header bg-warning text-dark">
+                <h5><i class="fas fa-bell"></i> Yangi Arizalar ({{ arizalar|length }})</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Talaba</th>
+                                <th>Guruh</th>
+                                <th>Fan</th>
+                                <th>Ariza sanasi</th>
+                                <th>Amallar</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for ariza in arizalar[:5] %}
+                            <tr>
+                                <td>
+                                    <strong>{{ ariza.talaba.ism }} {{ ariza.talaba.familiya }}</strong>
+                                    <br><small class="text-muted">{{ ariza.talaba.telefon }}</small>
+                                </td>
+                                <td>{{ ariza.guruh.nomi }}</td>
+                                <td>{{ ariza.guruh.fan.nomi }}</td>
+                                <td>{{ ariza.ariza_sana.strftime('%d.%m.%Y %H:%M') }}</td>
+                                <td>
+                                    <div class="btn-group" role="group">
+                                        <a href="{{ url_for('ariza_qabul', id=ariza.id) }}" 
+                                           class="btn btn-sm btn-success"
+                                           onclick="return confirm('Arizani qabul qilmoqchimisiz?')">
+                                            <i class="fas fa-check"></i> Qabul
+                                        </a>
+                                        <a href="{{ url_for('ariza_rad', id=ariza.id) }}" 
+                                           class="btn btn-sm btn-danger">
+                                            <i class="fas fa-times"></i> Rad
+                                        </a>
+                                        <a href="{{ url_for('ariza_detail', id=ariza.id) }}" 
+                                           class="btn btn-sm btn-info">
+                                            <i class="fas fa-eye"></i> Ko'rish
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% if arizalar|length > 5 %}
+                <div class="text-center mt-3">
+                    <a href="{{ url_for('arizalar_list') }}" class="btn btn-warning">
+                        <i class="fas fa-list"></i> Barcha arizalarni ko'rish ({{ arizalar|length }})
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h5><i class="fas fa-tasks"></i> Tezkor Harakatlar</h5>
+            </div>
+            <div class="list-group list-group-flush">
+                <a href="{{ url_for('arizalar_list') }}" class="list-group-item list-group-item-action">
+                    <i class="fas fa-clipboard-list text-warning"></i> Arizalarni ko'rish
+                    {% if arizalar_soni > 0 %}
+                    <span class="badge bg-warning text-dark float-end">{{ arizalar_soni }}</span>
+                    {% endif %}
+                </a>
+                <a href="{{ url_for('fan_add') }}" class="list-group-item list-group-item-action">
+                    <i class="fas fa-plus text-primary"></i> Yangi fan qo'shish
+                </a>
+                <a href="{{ url_for('guruh_add') }}" class="list-group-item list-group-item-action">
+                    <i class="fas fa-plus text-success"></i> Yangi guruh yaratish
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header bg-success text-white">
+                <h5><i class="fas fa-info-circle"></i> Tizim Ma'lumotlari</h5>
+            </div>
+            <div class="card-body">
+                <p><i class="fas fa-check-circle text-success"></i> Tizim normal ishlayapti</p>
+                <p><i class="fas fa-database text-info"></i> Ma'lumotlar bazasi ulangan</p>
+                <p><i class="fas fa-clock text-warning"></i> Oxirgi yangilanish: Bugun</p>
+                {% if arizalar_soni > 0 %}
+                <p><i class="fas fa-bell text-danger"></i> {{ arizalar_soni }} ta yangi ariza</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

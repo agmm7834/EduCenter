@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}{% if fan %}Fanni tahrirlash{% else %}Yangi Fan{% endif %}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">
+                    <i class="fas fa-book"></i> 
+                    {% if fan %}Fanni tahrirlash{% else %}Yangi Fan Qo'shish{% endif %}
+                </h4>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    <div class="mb-3">
+                        <label class="form-label">Fan Nomi *</label>
+                        <input type="text" class="form-control" name="nomi" 
+                               value="{{ fan.nomi if fan else '' }}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Tavsif</label>
+                        <textarea class="form-control" name="tavsif" rows="4">{{ fan.tavsif if fan else '' }}</textarea>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Davomiyligi (soat)</label>
+                            <input type="number" class="form-control" name="davomiyligi" 
+                                   value="{{ fan.davomiyligi if fan else '' }}">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Narxi (so'm)</label>
+                            <input type="number" class="form-control" name="narxi" step="0.01"
+                                   value="{{ fan.narxi if fan else '' }}">
+                        </div>
+                    </div>
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i> Saqlash
+                        </button>
+                        
+                        <a href="{{ url_for('fanlar_list') }}" class="btn btn-secondary">
+                            <i class="fas fa-times"></i> Bekor qilish
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

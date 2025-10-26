@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+{% block title %}Mentor Dashboard{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="card mb-4">
+            <div class="card-body">
+                <h2><i class="fas fa-chalkboard-teacher"></i> Mentor Kabineti</h2>
+                <p class="text-muted">Salom, {{ mentor.ism }} {{ mentor.familiya }}!</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-4 mb-4">
+        <div class="card">
+            <div class="card-body text-center">
+                <i class="fas fa-user-circle fa-4x text-success mb-3"></i>
+                <h5>Mening Profilim</h5>
+                <p class="text-muted">Shaxsiy ma'lumotlaringiz</p>
+                <a href="{{ url_for('mentor_profile') }}" class="btn btn-success">Ko'rish</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-4">
+        <div class="card bg-info text-white">
+            <div class="card-body text-center">
+                <i class="fas fa-users fa-3x mb-3"></i>
+                <h3>{{ guruhlar|length }}</h3>
+                <p>Mening Guruhlarim</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-4">
+        <div class="card bg-primary text-white">
+            <div class="card-body text-center">
+                <i class="fas fa-user-graduate fa-3x mb-3"></i>
+                <h3>
+                    {% set total = namespace(count=0) %}
+                    {% for guruh in guruhlar %}
+                        {% set total.count = total.count + guruh.talabalar|length %}
+                    {% endfor %}
+                    {{ total.count }}
+                </h3>
+                <p>Jami Talabalar</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header bg-success text-white">
+                <h5><i class="fas fa-users"></i> Mening Guruhlarim</h5>
+            </div>
+            <div class="card-body">
+                {% if guruhlar %}
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Guruh</th>
+                                <th>Fan</th>
+                                <th>Talabalar</th>
+                                <th>Holat</th>
+                                <th>Amallar</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for guruh in guruhlar %}
+                            <tr>
+                                <td><strong>{{ guruh.nomi }}</strong></td>
+                                <td>{{ guruh.fan.nomi }}</td>
+                                <td>
+                                    <span class="badge bg-info">
+                                        {{ guruh.talabalar|length }} / {{ guruh.max_talabalar }}
+                                    </span>
+                                </td>
+                                <td>
+                                    {% if guruh.holat == 'faol' %}
+                                        <span class="badge bg-success">Faol</span>
+                                    {% else %}
+                                        <span class="badge bg-secondary">{{ guruh.holat }}</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <a href="{{ url_for('mentor_guruh_detail', id=guruh.id) }}" 
+                                       class="btn btn-sm btn-info">
+                                        <i class="fas fa-eye"></i> Ko'rish
+                                    </a>
+                                    <a href="{{ url_for('dars_jadvali', guruh_id=guruh.id) }}" 
+                                       class="btn btn-sm btn-primary">
+                                        <i class="fas fa-calendar"></i> Jadval
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="text-center py-5">
+                    <i class="fas fa-users fa-3x text-muted mb-3"></i>
+                    <p class="text-muted">Sizga hali guruh biriktirilmagan</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

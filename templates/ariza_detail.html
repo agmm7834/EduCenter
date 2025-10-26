@@ -1,0 +1,143 @@
+{% extends "base.html" %}
+{% block title %}Ariza Tafsilotlari{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header bg-info text-white">
+                <h4 class="mb-0"><i class="fas fa-file-alt"></i> Ariza Tafsilotlari</h4>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6><i class="fas fa-user text-primary"></i> Talaba Ma'lumotlari</h6>
+                        <table class="table table-sm">
+                            <tr>
+                                <td><strong>Ism:</strong></td>
+                                <td>{{ ariza.talaba.ism }}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Familiya:</strong></td>
+                                <td>{{ ariza.talaba.familiya }}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Telefon:</strong></td>
+                                <td>{{ ariza.talaba.telefon or 'Kiritilmagan' }}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Manzil:</strong></td>
+                                <td>{{ ariza.talaba.manzil or 'Kiritilmagan' }}</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="col-md-6">
+                        <h6><i class="fas fa-users text-success"></i> Guruh Ma'lumotlari</h6>
+                        <table class="table table-sm">
+                            <tr>
+                                <td><strong>Guruh:</strong></td>
+                                <td>{{ ariza.guruh.nomi }}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Fan:</strong></td>
+                                <td>{{ ariza.guruh.fan.nomi }}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Mentor:</strong></td>
+                                <td>
+                                    {% if ariza.guruh.mentor %}
+                                        {{ ariza.guruh.mentor.ism }} {{ ariza.guruh.mentor.familiya }}
+                                    {% else %}
+                                        Belgilanmagan
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><strong>Talabalar:</strong></td>
+                                <td>{{ ariza.guruh.talabalar|length }}/{{ ariza.guruh.max_talabalar }}</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                
+                <hr>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6><i class="fas fa-calendar text-warning"></i> Ariza Ma'lumotlari</h6>
+                        <table class="table table-sm">
+                            <tr>
+                                <td><strong>Ariza sanasi:</strong></td>
+                                <td>{{ ariza.ariza_sana.strftime('%d.%m.%Y %H:%M') }}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Holat:</strong></td>
+                                <td>
+                                    {% if ariza.holat == 'kutilmoqda' %}
+                                        <span class="badge bg-warning">Kutilmoqda</span>
+                                    {% elif ariza.holat == 'qabul_qilindi' %}
+                                        <span class="badge bg-success">Qabul qilindi</span>
+                                    {% elif ariza.holat == 'qabul_qilinmadi' %}
+                                        <span class="badge bg-danger">Qabul qilinmadi</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% if ariza.javob_sana %}
+                            <tr>
+                                <td><strong>Javob sanasi:</strong></td>
+                                <td>{{ ariza.javob_sana.strftime('%d.%m.%Y %H:%M') }}</td>
+                            </tr>
+                            {% endif %}
+                            {% if ariza.izoh %}
+                            <tr>
+                                <td><strong>Izoh:</strong></td>
+                                <td>{{ ariza.izoh }}</td>
+                            </tr>
+                            {% endif %}
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header bg-warning text-dark">
+                <h5 class="mb-0"><i class="fas fa-tools"></i> Amallar</h5>
+            </div>
+            <div class="card-body">
+                {% if ariza.holat == 'kutilmoqda' %}
+                <div class="d-grid gap-2">
+                    <a href="{{ url_for('ariza_qabul', id=ariza.id) }}" 
+                       class="btn btn-success"
+                       onclick="return confirm('Arizani qabul qilmoqchimisiz?')">
+                        <i class="fas fa-check"></i> Qabul Qilish
+                    </a>
+                    <a href="{{ url_for('ariza_rad', id=ariza.id) }}" 
+                       class="btn btn-danger">
+                        <i class="fas fa-times"></i> Rad Etish
+                    </a>
+                </div>
+                {% else %}
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle"></i>
+                    Bu ariza allaqachon ko'rib chiqilgan
+                </div>
+                {% endif %}
+                
+                <hr>
+                
+                <div class="d-grid gap-2">
+                    <a href="{{ url_for('arizalar_list') }}" class="btn btn-secondary">
+                        <i class="fas fa-list"></i> Arizalar Ro'yxati
+                    </a>
+                    <a href="{{ url_for('admin_dashboard') }}" class="btn btn-outline-secondary">
+                        <i class="fas fa-home"></i> Dashboard
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
