@@ -1,4 +1,4 @@
-```
+
 # 🎓 EduCenter
 
 **EduCenter** – ta'lim muassasalari uchun zamonaviy, qulay va kengaytiriladigan boshqaruv tizimi.  
@@ -41,8 +41,6 @@ npm start
 python main.py
 ```
 
-> Server odatda `http://localhost:3000` da ishlaydi.
-
 ### API misoli:
 
 ```bash
@@ -61,32 +59,6 @@ pytest -v
 
 ---
 
-## 🤝 Hissa qo'shish (Contributing)
-
-Biz ochiq manbali jamoamiz! Har qanday taklif va yaxshilanish uchun xush kelibsiz.
-
-1. Repozitoriyani **fork** qiling  
-2. Yangi branch yarating  
-   ```bash
-   git checkout -b feature/yangi-funksiya
-   ```  
-3. O'zgartirishlarni saqlang  
-   ```bash
-   git commit -m "Yangi funksiya: talaba ro'yxati filtrlash"
-   ```  
-4. Branch'ni yuboring  
-   ```bash
-   git push origin feature/yangi-funksiya
-   ```  
-5. **Pull Request** yarating
-
----
-
-## 📄 Litsenziya (License)
-
-Ushbu loyiha **[MIT License](LICENSE)** ostida tarqatiladi.
-
----
 
 ### 👨‍💻 Muallif
 
