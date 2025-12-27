@@ -92,11 +92,5 @@ Ushbu loyiha **[MIT License](LICENSE)** ostida tarqatiladi.
 
 **Tojiyev Azamat**  
 📧 **Email:** [atojiyev2197@gmail.com](mailto:atojiyev2197@gmail.com)  
-🔗 **GitHub:** [@atojiyev](https://github.com/atojiyev) *(agar mavjud bo'lsa)*
+🔗 **GitHub:** [@atojiyev](https://github.com/atojiyev) 
 
-**Oxirgi yangilanish:** 27-oktyabr, 2025
-
----
-
-> ⭐ Agar loyiha yoqqan bo'lsa, **star** bosing va do'stlaringiz bilan ulashing!
-```
